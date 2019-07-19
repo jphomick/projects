@@ -61,7 +61,6 @@ public class HomeController {
                 return "redirect:/admin";
             }
         }
-        model.addAttribute("msg", new Message());
         return "list";
     }
 
@@ -76,7 +75,20 @@ public class HomeController {
             }
         }
         model.addAttribute("list", myPostings);
-        model.addAttribute("msg", new Message());
+        return "list";
+    }
+
+    @RequestMapping("/open")
+    public String openPosts(Principal principal, Model model) {
+        ArrayList<Message> myPostings = new ArrayList<>();
+        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
+        model.addAttribute("user", user);
+        for (Message msg : list.findAll()) {
+            if (!msg.isFound()) {
+                myPostings.add(msg);
+            }
+        }
+        model.addAttribute("list", myPostings);
         return "list";
     }
 
@@ -99,14 +111,12 @@ public class HomeController {
             }
         }
         model.addAttribute("list", searchPostings);
-        model.addAttribute("msg", new Message());
         return "list";
     }
 
     @RequestMapping("/see")
     public String seePage(Principal principal, Model model) {
         model.addAttribute("list", list.findAll());
-        model.addAttribute("msg", new Message());
         return "see";
     }
 
@@ -115,7 +125,6 @@ public class HomeController {
         model.addAttribute("list", list.findAll());
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         model.addAttribute("user", user);
-        model.addAttribute("search", "");
         return "list";
     }
 
@@ -127,6 +136,14 @@ public class HomeController {
     @GetMapping("/add")
     public String addMessage(Principal principal, Model model) {
         model.addAttribute("msg", new Message());
+        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
+        model.addAttribute("user", user);
+        return "add";
+    }
+
+    @RequestMapping("/update/{id}")
+    public String editTask(@PathVariable("id") long id, Principal principal, Model model) {
+        model.addAttribute("msg", list.findById(id).get());
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         model.addAttribute("user", user);
         return "add";

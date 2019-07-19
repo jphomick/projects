@@ -11,7 +11,7 @@
 <div th:replace="base :: header"></div>
 <form action="#" th:action="@{/send/}" th:object="${msg}" method="post" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}" />
-    <h3>We're sorry you lost your pet! Please fill out the information and we'll help find it!</h3><br />
+    <h3>We're sorry you lost your pet! Please fill out the information and we'll help find your friend!</h3><br />
     <label id="name">Title:</label>
     <input name="name" class="form-control" type="text" th:field="*{name}"/><br />
     <label>Description</label>

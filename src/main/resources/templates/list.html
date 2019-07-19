@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
-    <script>
-        var term = "";
-
-        function set() {
-            term = document.getElementById("search").value;
-        }
-    </script>
 </head>
 <body>
 <h1></h1>
@@ -29,6 +22,9 @@
                 <div th:if="${user.username} == ${msg.sender}">
                     <a class="btn btn-success" th:href="@{/complete/{id}(id=${msg.id})}">
                         I found my Pet!
+                    </a>
+                    <a class="btn btn-secondary" th:href="@{/update/{id}(id=${msg.id})}">
+                        Edit
                     </a>
                 </div>
                 </div>
