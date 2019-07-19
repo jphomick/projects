@@ -25,11 +25,11 @@
         </thead>
         <tbody>
         <tr th:each="msg : ${list}">
-            <td th:text="${msg.sentBy}"></td>
+            <td th:text="${msg.sender}"></td>
             <td th:text="${msg.name}"></td>
             <td th:text="${msg.content}"></td>
-            <td th:text="${msg.dateLost}"></td>
-            <td th:if="${user.username} == ${msg.sentBy}">
+            <td th:text="${msg.date}"></td>
+            <td th:if="${user.username} == ${msg.sender}">
                 <a class="btn btn-secondary btn-sm" th:href="@{/view/{id}(id=${msg.id})}">
                     View
                     <div th:if="${msg.thumb} != null">

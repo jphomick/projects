@@ -17,8 +17,8 @@
                 <img th:if="${msg.image} != null" th:src="${msg.image}" class="card-img-top" />
                 <div class="card-body">
                     <h4 class="card-title" th:text="${msg.name}"></h4>
-                    <h6 th:text="'By: ' + ${msg.sentBy}"></h6>
-                    <p th:text="'Lost on: ' + ${msg.dateLost}"></p>
+                    <h6 th:text="'By: ' + ${msg.sender}"></h6>
+                    <p th:text="'Lost on: ' + ${msg.date}"></p>
                     <p th:text="${msg.content}"></p>
                 </div>
             </div>

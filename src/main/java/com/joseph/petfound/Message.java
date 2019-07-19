@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 @Entity
 public class Message {
@@ -25,12 +24,12 @@ public class Message {
     private String content;
 
     @NonNull
-    @Size(min = 3)
-    private String dateLost;
+    @Size(min = 3, max = 50)
+    private String date;
 
     @NonNull
     @Size(min = 2)
-    private String sentBy;
+    private String sender;
 
     @NonNull
     private boolean found;
@@ -70,12 +69,12 @@ public class Message {
         this.content = content;
     }
 
-    public String getSentBy() {
-        return sentBy;
+    public String getSender() {
+        return sender;
     }
 
-    public void setSentBy(String sentBy) {
-        this.sentBy = sentBy;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public String getName() {
@@ -86,12 +85,12 @@ public class Message {
         this.name = name;
     }
 
-    public String getDateLost() {
-        return dateLost;
+    public String getDate() {
+        return date;
     }
 
-    public void setDateLost(String dateLost) {
-        this.dateLost = dateLost;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public boolean isFound() {

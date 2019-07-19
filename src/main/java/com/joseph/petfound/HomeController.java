@@ -13,14 +13,13 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Map;
 
 @Controller
 public class HomeController {
 
     @Autowired
-    MessageList list;
+    MessageRepository list;
 
     @Autowired
     UserRepository userRepository;
@@ -72,7 +71,7 @@ public class HomeController {
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         model.addAttribute("user", user);
         for (Message msg : list.findAll()) {
-            if (msg.getSentBy().equals(user.getUsername())) {
+            if (msg.getSender().equals(user.getUsername())) {
                 myPostings.add(msg);
             }
         }
@@ -123,7 +122,7 @@ public class HomeController {
             }
         }
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
-        msg.setSentBy(user.getUsername());
+        msg.setSender(user.getUsername());
         msg.setFound(false);
         list.save(msg);
 
