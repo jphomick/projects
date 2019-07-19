@@ -12,7 +12,7 @@
     <a class="btn btn-primary btn-lg" role="button" th:href="@{/}">Login</a>
     </p>
     <div class="row">
-        <div th:each="msg : ${list}" class="card" style="width: 18rem; margin: 10px;">
+        <div th:each="msg : ${list}" class="card" style="width: 20rem; margin: 10px;">
             <div th:if="${msg.found} == false">
                 <img th:if="${msg.image} != null" th:src="${msg.image}" class="card-img-top" />
                 <div class="card-body">

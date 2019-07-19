@@ -61,13 +61,13 @@ public class HomeController {
                 return "redirect:/admin";
             }
         }
+        model.addAttribute("msg", new Message());
         return "list";
     }
 
     @RequestMapping("/mine")
     public String myPage(Principal principal, Model model) {
         ArrayList<Message> myPostings = new ArrayList<>();
-        model.addAttribute("list", myPostings);
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         model.addAttribute("user", user);
         for (Message msg : list.findAll()) {
@@ -75,12 +75,38 @@ public class HomeController {
                 myPostings.add(msg);
             }
         }
+        model.addAttribute("list", myPostings);
+        model.addAttribute("msg", new Message());
+        return "list";
+    }
+
+    @RequestMapping("/search")
+    public String search(@RequestParam(name = "search") String text, Principal principal, Model model) {
+        ArrayList<Message> searchPostings = new ArrayList<>();
+        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
+        model.addAttribute("user", user);
+        if (text != null) {
+            for (Message msg : list.findAll()) {
+                if (msg.getContent() != null && msg.getContent().toLowerCase().contains(text.toLowerCase())) {
+                    searchPostings.add(msg);
+                } else if (msg.getSender() != null && msg.getSender().toLowerCase().contains(text.toLowerCase())) {
+                    searchPostings.add(msg);
+                } else if (msg.getDate() != null && msg.getDate().toLowerCase().contains(text.toLowerCase())) {
+                    searchPostings.add(msg);
+                } else if (msg.getName() != null && msg.getName().toLowerCase().contains(text.toLowerCase())) {
+                    searchPostings.add(msg);
+                }
+            }
+        }
+        model.addAttribute("list", searchPostings);
+        model.addAttribute("msg", new Message());
         return "list";
     }
 
     @RequestMapping("/see")
     public String seePage(Principal principal, Model model) {
         model.addAttribute("list", list.findAll());
+        model.addAttribute("msg", new Message());
         return "see";
     }
 
@@ -89,6 +115,7 @@ public class HomeController {
         model.addAttribute("list", list.findAll());
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         model.addAttribute("user", user);
+        model.addAttribute("search", "");
         return "list";
     }
 
