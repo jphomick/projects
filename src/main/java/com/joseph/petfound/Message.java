@@ -1,4 +1,4 @@
-package com.joseph.bullhorn;
+package com.joseph.petfound;
 
 import org.springframework.lang.NonNull;
 
@@ -18,28 +18,25 @@ public class Message {
 
     @NonNull
     @Size(min = 1)
+    private String name;
+
+    @NonNull
+    @Size(min = 1)
     private String content;
 
     @NonNull
-    private Date postedDate;
+    @Size(min = 3)
+    private String dateLost;
 
     @NonNull
     @Size(min = 2)
     private String sentBy;
 
+    @NonNull
+    private boolean found;
+
     private String image;
     private String thumb;
-
-    @NonNull
-    private boolean sepia;
-
-    public boolean isSepia() {
-        return sepia;
-    }
-
-    public void setSepia(boolean sepia) {
-        this.sepia = sepia;
-    }
 
     public String getImage() {
         return image;
@@ -73,19 +70,35 @@ public class Message {
         this.content = content;
     }
 
-    public Date getPostedDate() {
-        return postedDate;
-    }
-
-    public void setPostedDate(Date postedDate) {
-        this.postedDate = postedDate;
-    }
-
     public String getSentBy() {
         return sentBy;
     }
 
     public void setSentBy(String sentBy) {
         this.sentBy = sentBy;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDateLost() {
+        return dateLost;
+    }
+
+    public void setDateLost(String dateLost) {
+        this.dateLost = dateLost;
+    }
+
+    public boolean isFound() {
+        return found;
+    }
+
+    public void setFound(boolean found) {
+        this.found = found;
     }
 }

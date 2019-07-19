@@ -11,12 +11,14 @@
 <div th:replace="base :: header"></div>
 <form action="#" th:action="@{/send/}" th:object="${msg}" method="post" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}" />
-    What's happening?<br /><textarea class="form-control" rows="3" th:field="*{content}"/><br />
+    <h3>We're sorry you lost your pet! Please fill out the information and we'll help find it!</h3><br />
+    <label id="name">Title:</label>
+    <input name="name" class="form-control" type="text" th:field="*{name}"/><br />
+    <label>Description</label>
+    <textarea class="form-control" rows="3" th:field="*{content}"/><br />
+    <label id="date">Date Lost:</label>
+    <input name="date" class="form-control" type="text" th:field="*{dateLost}"/><br />
     <input class="form-control-file" type="file" name="file" /><br />
-    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" th:field="*{sepia}"/>
-    <label class="form-check-label" for="defaultCheck1">
-        Transform to sepia?
-    </label><br /><br />
     <input class="btn btn-primary btn-lg" role="button" type="submit" value="Send" />
 </form>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

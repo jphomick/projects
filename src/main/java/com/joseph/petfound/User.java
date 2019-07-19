@@ -1,6 +1,5 @@
-package com.joseph.bullhorn;
+package com.joseph.petfound;
 
-import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;

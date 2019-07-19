@@ -1,4 +1,4 @@
-package com.joseph.bullhorn;
+package com.joseph.petfound;
 
 import org.springframework.security.core.GrantedAuthority;
 

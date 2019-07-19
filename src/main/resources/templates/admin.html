@@ -17,17 +17,19 @@
         <thead class="thead-dark">
         <tr>
             <th>User</th>
-            <th>Content</th>
-            <th>Date</th>
-            <th>Preview</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Date Lost</th>
+            <th>Handles</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="msg : ${list}">
             <td th:text="${msg.sentBy}"></td>
+            <td th:text="${msg.name}"></td>
             <td th:text="${msg.content}"></td>
-            <td th:text="${msg.postedDate}"></td>
-            <td>
+            <td th:text="${msg.dateLost}"></td>
+            <td th:if="${user.username} == ${msg.sentBy}">
                 <a class="btn btn-secondary btn-sm" th:href="@{/view/{id}(id=${msg.id})}">
                     View
                     <div th:if="${msg.thumb} != null">

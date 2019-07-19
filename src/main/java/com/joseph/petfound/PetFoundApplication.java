@@ -1,13 +1,13 @@
-package com.joseph.bullhorn;
+package com.joseph.petfound;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BullhornApplication {
+public class PetFoundApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BullhornApplication.class, args);
+		SpringApplication.run(PetFoundApplication.class, args);
 	}
 
 }

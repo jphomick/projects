@@ -1,4 +1,4 @@
-package com.joseph.bullhorn;
+package com.joseph.petfound;
 
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -64,6 +65,20 @@ public class HomeController {
         return "list";
     }
 
+    @RequestMapping("/mine")
+    public String myPage(Principal principal, Model model) {
+        ArrayList<Message> myPostings = new ArrayList<>();
+        model.addAttribute("list", myPostings);
+        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
+        model.addAttribute("user", user);
+        for (Message msg : list.findAll()) {
+            if (msg.getSentBy().equals(user.getUsername())) {
+                myPostings.add(msg);
+            }
+        }
+        return "list";
+    }
+
     @RequestMapping("/see")
     public String seePage(Principal principal, Model model) {
         model.addAttribute("list", list.findAll());
@@ -75,7 +90,7 @@ public class HomeController {
         model.addAttribute("list", list.findAll());
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         model.addAttribute("user", user);
-        return "admin";
+        return "list";
     }
 
     @RequestMapping("/login")
@@ -99,25 +114,27 @@ public class HomeController {
         if (!file.isEmpty()) {
             try {
                 Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
-                if (msg.isSepia()) {
-                    msg.setImage(cloudc.sepia(uploadResult.get("public_id").toString()));
-                    String info = cloudc.sepiaThumb(uploadResult.get("public_id").toString() + ".jpg", 50, 50, "fill");
-                    msg.setThumb(info);
-                } else {
                     msg.setImage(uploadResult.get("url").toString());
                     String info = cloudc.createUrl(uploadResult.get("public_id").toString() + ".jpg", 50, 50, "fill");
                     String thumb = info.substring(info.indexOf("'") + 1, info.indexOf("'", info.indexOf("'") + 1));
                     msg.setThumb(thumb);
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         msg.setSentBy(user.getUsername());
-        msg.setPostedDate(new Date());
+        msg.setFound(false);
         list.save(msg);
 
+        return "redirect:/";
+    }
+
+    @RequestMapping("/complete/{id}")
+    public String completeTask(@PathVariable("id") long id) {
+        Message msg = list.findById(id).get();
+        msg.setFound(true);
+        list.save(msg);
         return "redirect:/";
     }
 

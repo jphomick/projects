@@ -1,4 +1,4 @@
-package com.joseph.bullhorn;
+package com.joseph.petfound;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BullhornApplicationTests {
+public class PetFoundApplicationTests {
 
 	@Test
 	public void contextLoads() {

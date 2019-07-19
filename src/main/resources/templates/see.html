@@ -11,31 +11,25 @@
     <p>
     <a class="btn btn-primary btn-lg" role="button" th:href="@{/}">Login</a>
     </p>
-    <table class="table table-bordered">
-        <thead class="thead-dark">
-        <tr>
-            <th>User</th>
-            <th>Content</th>
-            <th>Date</th>
-            <th>Preview</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="msg : ${list}">
-            <td th:text="${msg.sentBy}"></td>
-            <td th:text="${msg.content}"></td>
-            <td th:text="${msg.postedDate}"></td>
-            <td>
-                <a class="btn btn-secondary btn-sm disabled" aria-disabled="true" th:href="@{/view/{id}(id=${msg.id})}">
-                    Login to View
-                    <div th:if="${msg.thumb} != null">
-                        <img th:src="${msg.thumb}" class="img-thumbnail" />
-                    </div>
-                </a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <div th:each="msg : ${list}" class="card" style="width: 18rem; margin: 10px;">
+            <div th:if="${msg.found} == false">
+                <img th:if="${msg.image} != null" th:src="${msg.image}" class="card-img-top" />
+                <div class="card-body">
+                    <h4 class="card-title" th:text="${msg.name}"></h4>
+                    <h6 th:text="'By: ' + ${msg.sentBy}"></h6>
+                    <p th:text="'Lost on: ' + ${msg.dateLost}"></p>
+                    <p th:text="${msg.content}"></p>
+                </div>
+            </div>
+            <div th:if="${msg.found} == true">
+                <div class="card-body">
+                    <h4 class="card-title" th:text="${msg.name}"></h4>
+                    <p>This lost pet has been found!</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
