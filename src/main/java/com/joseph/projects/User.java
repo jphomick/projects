@@ -1,4 +1,4 @@
-package com.joseph.petfound;
+package com.joseph.projects;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

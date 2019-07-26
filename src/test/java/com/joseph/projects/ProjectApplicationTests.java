@@ -1,4 +1,4 @@
-package com.joseph.petfound;
+package com.joseph.projects;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

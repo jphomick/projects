@@ -1,4 +1,4 @@
-package com.joseph.petfound;
+package com.joseph.projects;
 
 import javax.persistence.*;
 import java.util.Collection;

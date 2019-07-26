@@ -1,4 +1,4 @@
-package com.joseph.petfound;
+package com.joseph.projects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -27,9 +26,6 @@ public class HomeController {
 
     @Autowired
     RoleRepository roleRepository;
-
-    @Autowired
-    CloudinaryConfig cloudc;
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String showRegistrationPage(Model model) {
