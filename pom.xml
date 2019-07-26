@@ -11,7 +11,7 @@
 	<groupId>com.joseph</groupId>
 	<artifactId>bullhorn</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>bullhorn</name>
+	<name>projects</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -19,6 +19,14 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf-spring5</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>

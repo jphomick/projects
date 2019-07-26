@@ -1,25 +1,26 @@
 package com.joseph.petfound;
 
-import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.Set;
 
 @Controller
 public class HomeController {
 
     @Autowired
-    MessageRepository list;
+    ProjectRepository projectRepository;
+
+    @Autowired
+    IssueRepository issueRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -52,144 +53,113 @@ public class HomeController {
 
     @RequestMapping("/")
     public String homePage(Principal principal, Model model) {
-        model.addAttribute("list", list.findAll());
+        model.addAttribute("issues", issueRepository.findAll());
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         model.addAttribute("user", user);
         Role role1 = roleRepository.findByRole("ADMIN");
         for (User check : role1.getUsers()) {
             if (check.getId() == user.getId()) {
-                return "redirect:/admin";
+                return "issue";
             }
         }
-        return "list";
+        return "issue";
     }
 
-    @RequestMapping("/mine")
-    public String myPage(Principal principal, Model model) {
-        ArrayList<Message> myPostings = new ArrayList<>();
+    @RequestMapping("/depot")
+    public String depotPage(Principal principal, Model model) {
+        model.addAttribute("projects", projectRepository.findAll());
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         model.addAttribute("user", user);
-        for (Message msg : list.findAll()) {
-            if (msg.getSender().equals(user.getUsername())) {
-                myPostings.add(msg);
-            }
+        return "project";
+    }
+
+    @GetMapping("/newProject")
+    public String newProject(Principal principal, Model model) {
+        model.addAttribute("project", new Project());
+        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
+        model.addAttribute("user", user);
+        return "new";
+    }
+
+    @PostMapping("/sendProject")
+    public String saveProject(@Valid Project project, BindingResult result, Principal principal, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("project", new Project());
+            User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
+            model.addAttribute("user", user);
+            return "new";
         }
-        model.addAttribute("list", myPostings);
-        return "list";
+        projectRepository.save(project);
+        return "redirect:/depot";
     }
 
-    @RequestMapping("/open")
-    public String openPosts(Principal principal, Model model) {
-        ArrayList<Message> myPostings = new ArrayList<>();
+    @GetMapping("/newIssue")
+    public String newIssue(Principal principal, Model model) {
+        model.addAttribute("issue", new Issue());
+        model.addAttribute("projects", projectRepository.findAll());
         User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
         model.addAttribute("user", user);
-        for (Message msg : list.findAll()) {
-            if (!msg.isFound()) {
-                myPostings.add(msg);
-            }
+        return "add";
+    }
+
+    @PostMapping("/sendIssue")
+    public String saveIssue(@Valid Issue issue, BindingResult result, Principal principal, Model model) {
+        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
+        issue.setSubmitBy(user.getUsername());
+        issue.setStatus("Open");
+        if (result.hasErrors()) {
+            model.addAttribute("issue", new Issue());
+            model.addAttribute("projects", projectRepository.findAll());
+            model.addAttribute("user", user);
+            return "add";
         }
-        model.addAttribute("list", myPostings);
-        return "list";
+        issueRepository.save(issue);
+        return "redirect:/";
     }
 
-    @RequestMapping("/search")
-    public String search(@RequestParam(name = "search") String text, Principal principal, Model model) {
-        ArrayList<Message> searchPostings = new ArrayList<>();
-        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
-        model.addAttribute("user", user);
-        if (text != null) {
-            for (Message msg : list.findAll()) {
-                if (msg.getContent() != null && msg.getContent().toLowerCase().contains(text.toLowerCase())) {
-                    searchPostings.add(msg);
-                } else if (msg.getSender() != null && msg.getSender().toLowerCase().contains(text.toLowerCase())) {
-                    searchPostings.add(msg);
-                } else if (msg.getDate() != null && msg.getDate().toLowerCase().contains(text.toLowerCase())) {
-                    searchPostings.add(msg);
-                } else if (msg.getName() != null && msg.getName().toLowerCase().contains(text.toLowerCase())) {
-                    searchPostings.add(msg);
-                }
-            }
-        }
-        model.addAttribute("list", searchPostings);
-        return "list";
+    @RequestMapping("/seeIssues")
+    public String seeIssue(Model model) {
+        model.addAttribute("issues", issueRepository.findAll());
+        model.addAttribute("projects", projectRepository.findAll());
+        return "see_issue";
     }
 
-    @RequestMapping("/see")
-    public String seePage(Principal principal, Model model) {
-        model.addAttribute("list", list.findAll());
-        return "see";
+    @RequestMapping("/complete/{id}")
+    public String completeTask(@PathVariable("id") long id) {
+        Issue issue = issueRepository.findById(id).get();
+        issue.setStatus("Closed");
+        issueRepository.save(issue);
+        return "redirect:/";
     }
 
-    @RequestMapping("/admin")
-    public String adminPage(Principal principal, Model model) {
-        model.addAttribute("list", list.findAll());
-        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
-        model.addAttribute("user", user);
-        return "list";
+    @RequestMapping("/open/{id}")
+    public String openTask(@PathVariable("id") long id) {
+        Issue issue = issueRepository.findById(id).get();
+        issue.setStatus("Open");
+        issueRepository.save(issue);
+        return "redirect:/";
+    }
+
+    @RequestMapping("/delete/{id}")
+    public String deleteTask(@PathVariable("id") long id) {
+        Issue issue = issueRepository.findById(id).get();
+        Project project = issue.getProject();
+        Set<Issue> issues = project.getIssues();
+        issues.remove(issue);
+        project.setIssues(issues);
+        projectRepository.save(project);
+        issueRepository.deleteById(id);
+        return "redirect:/";
+    }
+
+    @RequestMapping("/deleteProject/{id}")
+    public String deleteProject(@PathVariable("id") long id) {
+        projectRepository.deleteById(id);
+        return "redirect:/depot";
     }
 
     @RequestMapping("/login")
     public String login() {
         return "login";
-    }
-
-    @GetMapping("/add")
-    public String addMessage(Principal principal, Model model) {
-        model.addAttribute("msg", new Message());
-        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
-        model.addAttribute("user", user);
-        return "add";
-    }
-
-    @RequestMapping("/update/{id}")
-    public String editTask(@PathVariable("id") long id, Principal principal, Model model) {
-        model.addAttribute("msg", list.findById(id).get());
-        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
-        model.addAttribute("user", user);
-        return "add";
-    }
-
-    @PostMapping("/send")
-    public String sendMessage(Principal principal, @Valid Message msg, BindingResult result, @RequestParam("file")MultipartFile file) {
-        if (result.hasErrors()) {
-            return "redirect:/add";
-        }
-        if (!file.isEmpty()) {
-            try {
-                Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
-                    msg.setImage(uploadResult.get("url").toString());
-                    String info = cloudc.createUrl(uploadResult.get("public_id").toString() + ".jpg", 50, 50, "fill");
-                    String thumb = info.substring(info.indexOf("'") + 1, info.indexOf("'", info.indexOf("'") + 1));
-                    msg.setThumb(thumb);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        User user = ((CustomUserDetails)((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUser();
-        msg.setSender(user.getUsername());
-        msg.setFound(false);
-        list.save(msg);
-
-        return "redirect:/";
-    }
-
-    @RequestMapping("/complete/{id}")
-    public String completeTask(@PathVariable("id") long id) {
-        Message msg = list.findById(id).get();
-        msg.setFound(true);
-        list.save(msg);
-        return "redirect:/";
-    }
-
-    @RequestMapping("/view/{id}")
-    public String viewTask(@PathVariable("id") long id, Model model) {
-        model.addAttribute("msg", list.findById(id).get());
-        return "show";
-    }
-
-    @RequestMapping("/delete/{id}")
-    public String deleteTask(@PathVariable("id") long id, Model model) {
-        list.deleteById(id);
-        return "redirect:/admin";
     }
 }

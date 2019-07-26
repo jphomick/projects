@@ -9,34 +9,20 @@
 <h1></h1>
 <div class="container">
     <div th:replace="base :: header"></div>
-    <div class="row">
-        <div th:each="msg : ${list}" class="card" style="width: 20rem; margin: 10px;">
-            <div th:if="${msg.found} == false">
-                <img th:if="${msg.image} != null" th:src="${msg.image}" class="card-img-top" />
-                <div class="card-body">
-                <h4 class="card-title" th:text="${msg.name}"></h4>
-                <h6 th:text="'By: ' + ${msg.sender}"></h6>
-                <p th:text="'Lost on: ' + ${msg.date}"></p>
-                <p th:text="${msg.content}"></p>
-
-                <div th:if="${user.username} == ${msg.sender}">
-                    <a class="btn btn-success" th:href="@{/complete/{id}(id=${msg.id})}">
-                        I found my Pet!
-                    </a>
-                    <a class="btn btn-secondary" th:href="@{/update/{id}(id=${msg.id})}">
-                        Edit
-                    </a>
-                </div>
-                </div>
-            </div>
-            <div th:if="${msg.found} == true">
-                <div class="card-body">
-                    <h4 class="card-title" th:text="${msg.name}"></h4>
-                    <p>This lost pet has been found!</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Employee</th>
+            <th>Position</th>
+            <th>Department</th>
+        </tr>
+        <tr th:each="employee : ${issues}">
+            <td th:text="${employee.id}"></td>
+            <td th:text="${employee.name}"></td>
+            <td th:text="${employee.position}"></td>
+            <td th:text="${employee.project}"></td>
+        </tr>
+    </table>
     </table>
 </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

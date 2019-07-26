@@ -6,24 +6,18 @@
 </head>
 <body>
 <div th:fragment="header">
-    <p><a class="btn btn-danger" role="button" href="/add">Ask for help!</a>
-    <a class="btn btn-primary" role="button" href="/open">Open Postings</a>
-        <a class="btn btn-secondary" role="button" href="/">View All</a>
-    <a class="btn btn-secondary" role="button" href="/mine">My Postings</a></p>
-    <form onsubmit="set()" action="#" th:action="@{/search}" method="post">
-        <div class="form-row">
-            <div class="form-group" style="margin-right: 5px">
-                <input type="submit" class="btn btn-secondary" role="button" value="Search" />
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="text" name="search" id="search" />
-            </div>
-        </div>
-    </form>
-    <p>Logged in as:
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div><a class="btn btn-danger" position="button" href="/newIssue">Add a new Issue</a>
+    <a class="btn btn-primary" position="button" href="/newProject">Add a new Project</a>
+        <a class="btn btn-secondary" position="button" href="/">Issues</a>
+    <a class="btn btn-secondary" position="button" href="/depot">Projects</a>
+        <a class="btn btn-secondary" position="button" href="/seeIssues">View All</a>
+    </div>
+    <div>- Logged in as:
         <b th:text="${user.username}"></b>
-        <a class="btn btn-dark btn-sm" role="button" href="/logout">Logout</a>
-    </p>
+        <a class="btn btn-dark btn-sm" position="button" href="/logout">Logout</a>
+    </div>
+    </nav>
 </div>
 </body>
 </html>
